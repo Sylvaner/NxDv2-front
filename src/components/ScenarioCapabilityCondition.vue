@@ -1,51 +1,48 @@
 <template>
-  <Fieldset legend="Si la valeur est">
-    <template v-if="capability.get.type === 'boolean'">
-      <div class="p-field-radiobutton">
-        <RadioButton
-          id="boolean-true"
-          name="boolean"
-          value="true"
-          v-model="conditionValue"
-          @change="updateCondition"
-        />
-        <label for="boolean-true">Vrai</label>
-      </div>
-      <div class="p-field-radiobutton">
-        <RadioButton
-          id="boolean-false"
-          name="boolean"
-          value="false"
-          v-model="conditionValue"
-          @change="updateCondition"
-        />
-        <label for="boolean-false">Faux</label>
-      </div>
-    </template>
-    <div class="p-grid" v-else>
-      <Dropdown
-        class="p-col-6"
-        v-model="conditionEquality"
-        :options="equalities"
-        optionLabel="name"
-        optionValue="code"
-        placeholder="Select a condition"
-        @change="updateCondition"
-      />
-      <InputText
-        class="p-col-6"
-        type="text"
+  <div v-if="capability.get.type === 'boolean'" class="p-grid">
+    <div class="p-field-radiobutton p-col-6">
+      <RadioButton
+        id="boolean-true"
+        name="boolean"
+        value="true"
         v-model="conditionValue"
         @change="updateCondition"
       />
+      <label for="boolean-true">Vrai</label>
     </div>
-  </Fieldset>
+    <div class="p-field-radiobutton p-col-6">
+      <RadioButton
+        id="boolean-false"
+        name="boolean"
+        value="false"
+        v-model="conditionValue"
+        @change="updateCondition"
+      />
+      <label for="boolean-false">Faux</label>
+    </div>
+  </div>
+  <div class="p-grid" v-else>
+    <Dropdown
+      class="p-col-6"
+      v-model="conditionEquality"
+      :options="equalities"
+      optionLabel="name"
+      optionValue="code"
+      placeholder="Select a condition"
+      @change="updateCondition"
+    />
+    <InputText
+      class="p-col-6"
+      type="text"
+      v-model="conditionValue"
+      @change="updateCondition"
+    />
+  </div>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent } from "vue";
 import RadioButton from "primevue/radiobutton";
-import Fieldset from "primevue/fieldset";
 import Dropdown from "primevue/dropdown";
 import InputText from "primevue/inputtext";
 
@@ -63,7 +60,6 @@ export default defineComponent({
   name: "ScenarioCapabilityValue",
   components: {
     RadioButton,
-    Fieldset,
     Dropdown,
     InputText
   },

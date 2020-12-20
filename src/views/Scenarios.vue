@@ -2,14 +2,20 @@
   <div class="content-section">
     <Card v-if="devices.length > 0">
       <template #content>
-        <div class="p-fluid p-grid">
-          <div class="p-col-6">
-            <span class="p-float-label">
-              <InputText id="scenarioName" type="text" v-model="scenarioName" />
-              <label for="scenarioName">Scenario name</label>
-            </span>
+        <Fieldset legend="Informations">
+          <div class="p-fluid p-grid">
+            <div class="p-col-6">
+              <span class="p-float-label">
+                <InputText
+                  id="scenarioName"
+                  type="text"
+                  v-model="scenarioName"
+                />
+                <label for="scenarioName">Scenario name</label>
+              </span>
+            </div>
           </div>
-        </div>
+        </Fieldset>
         <Fieldset legend="Déclencheur">
           <div class="p-fluid p-grid">
             <div class="p-col-6">
@@ -24,11 +30,12 @@
             </div>
           </div>
         </Fieldset>
-        <ScenarioCapabilityCondition
-          v-if="trigger !== null"
-          :capability="trigger.capability.capabilityData"
-          v-model="triggerCondition"
-        ></ScenarioCapabilityCondition>
+        <Fieldset v-if="trigger !== null" legend="Si la valeur est">
+          <ScenarioCapabilityCondition
+            :capability="trigger.capability.capabilityData"
+            v-model="triggerCondition"
+          ></ScenarioCapabilityCondition>
+        </Fieldset>
         <Fieldset legend="Action" v-if="triggerCondition !== null">
           <div class="p-fluid p-grid">
             <div class="p-col-6">
@@ -43,11 +50,12 @@
             </div>
           </div>
         </Fieldset>
-        <ScenarioCapabilityValue
-          v-if="action !== null"
-          :capability="action.capability.capabilityData"
-          v-model="actionValue"
-        ></ScenarioCapabilityValue>
+        <Fieldset v-if="action !== null" legend="Valeur">
+          <ScenarioCapabilityValue
+            :capability="action.capability.capabilityData"
+            v-model="actionValue"
+          ></ScenarioCapabilityValue>
+        </Fieldset>
       </template>
       <template #footer>
         <Button icon="pi pi-check" label="Ajouter" @click="add" />
@@ -55,6 +63,7 @@
     </Card>
   </div>
 </template>
+
 <script lang="ts">
 import { defineComponent } from "vue";
 import NextDomApi, { Device } from "@/services/NextDomApi";
@@ -98,6 +107,8 @@ export default defineComponent({
   },
   methods: {
     add() {
+      console.log(this.trigger);
+      console.log(this.triggerCondition);
       if (
         this.trigger !== null &&
         this.triggerCondition !== null &&
@@ -114,11 +125,15 @@ export default defineComponent({
           actionCapability: this.action.capability,
           actionValue: this.actionValue
         };
-        console.log(modelData);
         NextDomApi.postScenario(modelData);
-        console.log("add");
       }
     }
   }
 });
 </script>
+
+<style scoped>
+fieldset {
+  margin-bottom: 1rem;
+}
+</style>
