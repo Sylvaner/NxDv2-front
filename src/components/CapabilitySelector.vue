@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { Options, Vue, prop, setup } from "vue-class-component";
+import { computed, defineComponent } from "vue";
 import CascadeSelect from "primevue/cascadeselect";
 import { CapabilityAccessor, Device } from "@/services/NextDomApi";
 
@@ -37,45 +37,32 @@ interface ChangeEvent {
   value: any;
 }
 
-class CapabilitySelectProps {
-  devices = prop({
-    type: Object,
-    required: true
-  });
-  filter = prop({
-    type: String,
-    default: "",
-    required: false
-  });
-}
-
-function useChoice(props: any, emit: any) {
-  function set(capabilityChoice: CapabilitySelectorChoice) {
-    emit("update:modelValue", capabilityChoice);
-  }
-  return {
-    set
-  };
-}
-
-@Options({
+export default defineComponent({
+  name: "CapabilitySelector",
   components: {
     CascadeSelect
   },
-  emits: ["update:modelValue", "change"]
-})
-export default class CapabilitySelector extends Vue.with(
-  CapabilitySelectProps
-) {
-  devices!: Array<Device>;
-  filter!: AccessorType;
-  private filteredDevices: Array<DeviceChoice> = [];
-  private selectedCapability: CapabilityChoice = {
-    name: "",
-    capabilityData: {}
-  };
-  private lastSelectedDevice: DeviceChoice = { name: "", capabilities: [] };
-
+  emits: ["update:modelValue", "change"],
+  props: {
+    devices: Object,
+    filter: {
+      type: String,
+      default: ""
+    },
+    modelValue: Object
+  },
+  data: () => {
+    return new (class {
+      devices!: Array<Device>;
+      filter!: AccessorType;
+      filteredDevices: Array<DeviceChoice> = [];
+      selectedCapability: CapabilityChoice = {
+        name: "",
+        capabilityData: {}
+      };
+      lastSelectedDevice: DeviceChoice = { name: "", capabilities: [] };
+    })();
+  },
   mounted() {
     if (this.filter !== "") {
       this.filteredDevices = this.getDevicesCapabilities(
@@ -83,51 +70,55 @@ export default class CapabilitySelector extends Vue.with(
         this.filter
       );
     }
-  }
-
-  getDevicesCapabilities(
-    devices: Array<Device>,
-    accessorType: AccessorType
-  ): Array<DeviceChoice> {
-    const devicesCapabilities: Array<DeviceChoice> = [];
-    for (const device of devices) {
-      const capabilities: Array<CapabilityChoice> = [];
-      if ("capabilities" in device) {
-        for (const capability of Object.entries(device.capabilities)) {
-          if (
-            Object.prototype.hasOwnProperty.call(capability[1], accessorType)
-          ) {
-            capabilities.push({
-              name: capability[0],
-              capabilityData: capability[1]
-            });
+  },
+  methods: {
+    getDevicesCapabilities(
+      devices: Array<Device>,
+      accessorType: AccessorType
+    ): Array<DeviceChoice> {
+      const devicesCapabilities: Array<DeviceChoice> = [];
+      for (const device of devices) {
+        const capabilities: Array<CapabilityChoice> = [];
+        if ("capabilities" in device) {
+          for (const capability of Object.entries(device.capabilities)) {
+            if (
+              Object.prototype.hasOwnProperty.call(capability[1], accessorType)
+            ) {
+              capabilities.push({
+                name: capability[0],
+                capabilityData: capability[1]
+              });
+            }
           }
         }
+        if (capabilities.length > 0) {
+          devicesCapabilities.push({
+            name: device.name,
+            capabilities: capabilities
+          });
+        }
       }
-      if (capabilities.length > 0) {
-        devicesCapabilities.push({
-          name: device.name,
-          capabilities: capabilities
-        });
-      }
+      return devicesCapabilities;
+    },
+    capabilitySelected(e: ChangeEvent) {
+      this.choice = {
+        device: this.lastSelectedDevice,
+        capability: e.value
+      };
+      this.$emit("change");
+    },
+    groupChanged(e: ChangeEvent) {
+      this.lastSelectedDevice = e.value;
     }
-    return devicesCapabilities;
-  }
-
-  choice = setup(() => {
-    return useChoice(this.$props, this.$emit);
-  });
-
-  capabilitySelected(e: ChangeEvent) {
-    this.choice.set({
-      device: this.lastSelectedDevice,
-      capability: e.value
+  },
+  setup(props, { emit }) {
+    const choice = computed({
+      get: () => props.modelValue,
+      set: (newValue) => emit("update:modelValue", newValue)
     });
-    this.$emit("change");
+    return {
+      choice
+    };
   }
-
-  groupChanged(e: ChangeEvent) {
-    this.lastSelectedDevice = e.value;
-  }
-}
+});
 </script>

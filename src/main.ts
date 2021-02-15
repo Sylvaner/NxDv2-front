@@ -3,7 +3,6 @@ import PrimeVue from 'primevue/config';
 import App from './App.vue';
 import router from './router';
 import store from './store';
-
 import Card from 'primevue/card';
 
 import 'primevue/resources/themes/saga-blue/theme.css';       //theme
