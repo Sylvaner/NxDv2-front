@@ -1,20 +1,26 @@
 <template>
   <div class="home">
-    <div v-for="deviceCategory in deviceCategories"
-           :key="`deviceCategory-${deviceCategory}`">
-      <h2>{{ deviceCategory }}</h2>
-      <div class="p-grid">
-        <component
-            v-for="(device, deviceIndex) in devices[deviceCategory]"
-            :key="device.id"
-            v-bind:is="deviceComponent(deviceCategory)"
-            class="p-col-3"
-            :device="device"
-            @click="deviceSelected(deviceCategory, deviceIndex)"
-        ></component>
-      </div>
+    <h2>Lumières</h2>
+    <div class="p-grid">
+      <LightTile
+          v-for="device in devices['light']"
+          :key="device.id"
+          class="p-col-3"
+          :device="device"
+          :deviceState="states[device.id]"
+      ></LightTile>
     </div>
-    <DeviceWizard v-model="showWizard"></DeviceWizard>
+    <h2>Non configurés</h2>
+    <div class="p-grid">
+      <UnknownTile
+          v-for="(device, deviceIndex) in devices['unknown']"
+          :key="device.id"
+          class="p-col-3"
+          :device="device"
+          @click="deviceSelected('unknown', deviceIndex)"
+      ></UnknownTile>
+    </div>
+    <DeviceWizard v-model:showed="showWizard" v-model="selectedDevice"></DeviceWizard>
   </div>
 </template>
 
@@ -39,7 +45,13 @@ export default defineComponent({
         unknown: []
       };
       states: { [id: string]: any } = {};
-      selectedDevice?: Device;
+      selectedDevice: Device = {
+        id: '',
+        name: '',
+        capabilities: [],
+        category: 'unknown',
+        config: {}
+      };
       showWizard: boolean = false;
     })();
   },
@@ -49,17 +61,17 @@ export default defineComponent({
         this.devices[deviceCategory] = devices.filter((device: any) => device.category == deviceCategory);
       }
     });
-    /*
     setInterval(() => {
-      for (const light of this.devices.lights) {
+      for (const light of this.devices.light) {
         NextDomApi.getDeviceState(light.id).then((state) => {
           if (state !== null) {
             this.states[light.id] = state;
+            console.log(this.states);
+            console.log(state);
           }
         });
       }
     }, 5000);
-     */
   },
   methods: {
     deviceComponent(deviceCategory: string): string {

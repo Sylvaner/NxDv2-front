@@ -3,8 +3,9 @@ import Axios, { AxiosInstance } from "axios";
 export interface Device {
   id: string;
   name: string;
-  type: string;
+  category: string;
   capabilities: Record<string, any>;
+  config: Record<string, any>;
 }
 
 interface DeviceState {
@@ -80,11 +81,27 @@ export default class NextDomApi {
     });
   }
 
-  public static setDeviceAction(deviceId: string, capability: string, newValue: any) {
+  public static setDeviceAction(deviceId: string, capability: string, newValue: any): Promise<[any]> {
     return new Promise<[any]>((resolve, reject) => {
-      console.log(`/device/${deviceId}/action/${capability}/${newValue}`);
       NextDomApi.getInstance()
         .axiosInstance.post(`/device/${deviceId}/action/${capability}/${newValue}`)
+        .then((response: any) => {
+          resolve(response.data);
+        })
+        .catch((response: any) => {
+          reject(response);
+        })
+    });
+  }
+
+  public static setCategory(deviceId: string, category: string, config: object): Promise<any> {
+    const configData = {
+      category,
+      config
+    };
+    return new Promise<Device>((resolve, reject) => {
+      NextDomApi.getInstance()
+        .axiosInstance.post(`/device/${deviceId}/category`, configData)
         .then((response: any) => {
           resolve(response.data);
         })
