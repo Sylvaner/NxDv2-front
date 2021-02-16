@@ -7,12 +7,11 @@
   </Card>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-import Card from "primevue/card";
+<script>
+import Card from 'primevue/card';
 
-export default defineComponent({
-  name: "UnknownTile",
+export default ({
+  name: 'UnknownTile',
   components: {
     Card
   },

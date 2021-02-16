@@ -17,17 +17,17 @@
   </Dialog>
 </template>
 
-<script lang="ts">
+<script>
 import Dialog from 'primevue/dialog';
 import Button from 'primevue/button';
 import SelectButton from 'primevue/selectbutton';
 import Fieldset from 'primevue/fieldset';
 import Dropdown from 'primevue/dropdown';
-import {computed, defineComponent} from "vue";
 import NextDomApi from '@/services/NextDomApi';
+import { computed } from 'vue';
 
-export default defineComponent({
-  name: "DeviceWizard",
+export default ({
+  name: 'DeviceWizard',
   components: {
     Button,
     SelectButton,
@@ -37,41 +37,39 @@ export default defineComponent({
   },
   props: {
     modelValue: Object,
-    showed: Boolean,
+    showed: Boolean
   },
   data: () => {
-    return new (class {
-      deviceCategories: {name: string; value: string}[] = [
-        {name: 'Unknown', value: 'unknown'},
-        {name: 'Light', value: 'light'}
-      ];
-    bufferedConfig = {
-      state: null,
-      brightness: null
-    }
-    })();
+    return {
+      deviceCategories: [
+        { name: 'Unknown', value: 'unknown' },
+        { name: 'Light', value: 'light' }
+      ],
+      bufferedConfig: {
+        state: null,
+        brightness: null
+      }
+    };
   },
-  emits: ["update:modelValue", "update:showed"],
   setup(props, { emit }) {
     const showedValue = computed({
       get: () => props.showed,
       set: (value) => emit('update:showed', value)
-    })
+    });
     const deviceValue = computed({
       get: () => props.modelValue,
       set: (value) => emit('update:modelValue', value)
-    })
+    });
 
     return {
       showedValue,
       deviceValue
-    }
+    };
   },
   methods: {
     saveChanges() {
-      console.log(this.modelValue);
-      NextDomApi.setCategory(this.deviceValue!.id, this.deviceValue!.category, this.bufferedConfig).then(() => {
-        console.log('OK');
+      NextDomApi.setCategory(this.deviceValue.id, this.deviceValue.category, this.bufferedConfig).then(() => {
+        this.$emit('update');
       });
       this.showedValue = false;
     }

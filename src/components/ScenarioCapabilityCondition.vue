@@ -40,24 +40,14 @@
   </div>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent } from "vue";
-import RadioButton from "primevue/radiobutton";
-import Dropdown from "primevue/dropdown";
-import InputText from "primevue/inputtext";
+<script>
+import RadioButton from 'primevue/radiobutton';
+import Dropdown from 'primevue/dropdown';
+import InputText from 'primevue/inputtext';
+import { computed } from 'vue';
 
-export interface CapabilityCondition {
-  test: string;
-  value: any;
-}
-
-interface Equality {
-  name: string;
-  code: string;
-}
-
-export default defineComponent({
-  name: "ScenarioCapabilityValue",
+export default ({
+  name: 'ScenarioCapabilityValue',
   components: {
     RadioButton,
     Dropdown,
@@ -68,22 +58,21 @@ export default defineComponent({
     modelValue: Object
   },
   data: () => {
-    return new (class {
-      conditionValue: string = "";
-      conditionEquality: string = "==";
-    })();
+    return {
+      conditionValue: '',
+      conditionEquality: '=='
+    };
   },
-  emits: ["update:modelValue"],
   mounted() {
     this.updateCondition();
   },
   methods: {
-    updateCondition(): void {
+    updateCondition() {
       if (
         this.capability !== undefined &&
-        this.capability.get.type === "boolean"
+        this.capability.get.type === 'boolean'
       ) {
-        this.conditionEquality = "==";
+        this.conditionEquality = '==';
       }
       this.condition = {
         test: this.conditionEquality,
@@ -94,21 +83,21 @@ export default defineComponent({
   setup(props, { emit }) {
     const condition = computed({
       get: () => props.modelValue,
-      set: (value) => emit("update:modelValue", value)
+      set: (value) => emit('update:modelValue', value)
     });
     const equalities = computed(() => {
-      const baseEqualities: Equality[] = [
-        { name: "<", code: "<" },
-        { name: "<=", code: "<=" },
-        { name: "=", code: "==" },
-        { name: ">", code: ">" },
-        { name: ">=", code: ">=" },
-        { name: "!=", code: "!=" }
+      const baseEqualities = [
+        { name: '<', code: '<' },
+        { name: '<=', code: '<=' },
+        { name: '=', code: '==' },
+        { name: '>', code: '>' },
+        { name: '>=', code: '>=' },
+        { name: '!=', code: '!=' }
       ];
       if (
         props.capability !== undefined &&
         props.capability.get !== undefined &&
-        props.capability.get.type === "number"
+        props.capability.get.type === 'number'
       ) {
         return baseEqualities;
       } else {

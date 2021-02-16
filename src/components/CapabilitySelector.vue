@@ -10,61 +10,35 @@
   />
 </template>
 
-<script lang="ts">
-import { computed, defineComponent } from "vue";
-import CascadeSelect from "primevue/cascadeselect";
-import { CapabilityAccessor, Device } from "@/services/NextDomApi";
+<script>
+import { computed } from 'vue';
+import CascadeSelect from 'primevue/cascadeselect';
 
-type AccessorType = "get" | "set" | "";
-
-interface DeviceChoice {
-  name: string;
-  capabilities: Array<CapabilityChoice>;
-}
-
-export interface CapabilityChoice {
-  name: string;
-  capabilityData: CapabilityAccessor;
-}
-
-export interface CapabilitySelectorChoice {
-  device: DeviceChoice;
-  capability: CapabilityChoice;
-}
-
-interface ChangeEvent {
-  originalEvent: Event;
-  value: any;
-}
-
-export default defineComponent({
-  name: "CapabilitySelector",
+export default ({
+  name: 'CapabilitySelector',
   components: {
     CascadeSelect
   },
-  emits: ["update:modelValue", "change"],
   props: {
-    devices: Object,
+    devices: Array,
     filter: {
       type: String,
-      default: ""
+      default: ''
     },
     modelValue: Object
   },
   data: () => {
-    return new (class {
-      devices!: Array<Device>;
-      filter!: AccessorType;
-      filteredDevices: Array<DeviceChoice> = [];
-      selectedCapability: CapabilityChoice = {
-        name: "",
+    return {
+      filteredDevices: [],
+      selectedCapability: {
+        name: '',
         capabilityData: {}
-      };
-      lastSelectedDevice: DeviceChoice = { name: "", capabilities: [] };
-    })();
+      },
+      lastSelectedDevice: { name: '', capabilities: [] }
+    };
   },
   mounted() {
-    if (this.filter !== "") {
+    if (this.filter !== '') {
       this.filteredDevices = this.getDevicesCapabilities(
         this.devices,
         this.filter
@@ -72,14 +46,11 @@ export default defineComponent({
     }
   },
   methods: {
-    getDevicesCapabilities(
-      devices: Array<Device>,
-      accessorType: AccessorType
-    ): Array<DeviceChoice> {
-      const devicesCapabilities: Array<DeviceChoice> = [];
+    getDevicesCapabilities(devices, accessorType) {
+      const devicesCapabilities = [];
       for (const device of devices) {
-        const capabilities: Array<CapabilityChoice> = [];
-        if ("capabilities" in device) {
+        const capabilities = [];
+        if ('capabilities' in device) {
           for (const capability of Object.entries(device.capabilities)) {
             if (
               Object.prototype.hasOwnProperty.call(capability[1], accessorType)
@@ -100,21 +71,21 @@ export default defineComponent({
       }
       return devicesCapabilities;
     },
-    capabilitySelected(e: ChangeEvent) {
+    capabilitySelected(e) {
       this.choice = {
         device: this.lastSelectedDevice,
         capability: e.value
       };
-      this.$emit("change");
+      this.$emit('change');
     },
-    groupChanged(e: ChangeEvent) {
+    groupChanged(e) {
       this.lastSelectedDevice = e.value;
     }
   },
   setup(props, { emit }) {
     const choice = computed({
       get: () => props.modelValue,
-      set: (newValue) => emit("update:modelValue", newValue)
+      set: (newValue) => emit('update:modelValue', newValue)
     });
     return {
       choice

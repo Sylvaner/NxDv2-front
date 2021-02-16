@@ -64,23 +64,18 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-import NextDomApi, { Device } from "@/services/NextDomApi";
-import CapabilitySelector, {
-  CapabilitySelectorChoice
-} from "@/components/CapabilitySelector.vue";
-import ScenarioCapabilityCondition, {
-  CapabilityCondition
-} from "@/components/ScenarioCapabilityCondition.vue";
-import ScenarioCapabilityValue from "@/components/ScenarioCapabilityValue.vue";
-import InputText from "primevue/inputtext";
-import Button from "primevue/button";
-import Card from "primevue/card";
-import Fieldset from "primevue/fieldset";
+<script>
+import NextDomApi from '@/services/NextDomApi';
+import ScenarioCapabilityValue from '@/components/ScenarioCapabilityValue.vue';
+import ScenarioCapabilityCondition from '@/components/ScenarioCapabilityCondition.vue';
+import CapabilitySelector from '@/components/CapabilitySelector.vue';
+import InputText from 'primevue/inputtext';
+import Button from 'primevue/button';
+import Card from 'primevue/card';
+import Fieldset from 'primevue/fieldset';
 
-export default defineComponent({
-  name: "Scenarios",
+export default ({
+  name: 'Scenarios',
   components: {
     InputText,
     CapabilitySelector,
@@ -91,14 +86,14 @@ export default defineComponent({
     Fieldset
   },
   data: () => {
-    return new (class {
-      devices: Array<Device> = [];
-      scenarioName: string = "";
-      trigger: CapabilitySelectorChoice | null = null;
-      triggerCondition: CapabilityCondition | null = null;
-      action: CapabilitySelectorChoice | null = null;
-      actionValue: boolean | number | string | null = null;
-    })();
+    return {
+      devices: [],
+      scenarioName: '',
+      trigger: null,
+      triggerCondition: null,
+      action: null,
+      actionValue: null
+    };
   },
   mounted() {
     NextDomApi.getDevices().then((devices) => {
@@ -107,15 +102,13 @@ export default defineComponent({
   },
   methods: {
     add() {
-      console.log(this.trigger);
-      console.log(this.triggerCondition);
       if (
         this.trigger !== null &&
         this.triggerCondition !== null &&
         this.action !== null
       ) {
         const modelData = {
-          model: "if-then",
+          model: 'if-then',
           name: this.scenarioName,
           triggerDevice: this.trigger.device.name,
           triggerCapability: this.trigger.capability,

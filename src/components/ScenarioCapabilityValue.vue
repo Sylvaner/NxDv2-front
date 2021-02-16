@@ -24,13 +24,13 @@
   </div>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent } from "vue";
-import RadioButton from "primevue/radiobutton";
-import InputText from "primevue/inputtext";
+<script>
+import RadioButton from 'primevue/radiobutton';
+import InputText from 'primevue/inputtext';
+import { computed } from 'vue';
 
-export default defineComponent({
-  name: "ScenarioCapabilityValue",
+export default ({
+  name: 'ScenarioCapabilityValue',
   components: {
     RadioButton,
     InputText
@@ -39,11 +39,10 @@ export default defineComponent({
     capability: Object,
     modelValue: String
   },
-  emits: ["update:modelValue"],
   setup(props, { emit }) {
     const capabilityValue = computed({
       get: () => props.modelValue,
-      set: (value) => emit("update:modelValue", value)
+      set: (value) => emit('update:modelValue', value)
     });
 
     return {
