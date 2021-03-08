@@ -26,7 +26,9 @@ export default defineComponent({
           id: 'a-test-id',
           items: [
             { type: 'Title', props: {title: 'Mon titre' }},
-            { type: 'BooleanTextState', props: {showLabel: true, label: 'My state', on: 'On', off: 'Off', value: true}}
+            { type: 'BooleanTextState', props: {showLabel: true, label: 'My state', on: 'On', off: 'Off', value: true}},
+            { type: 'ActionButton', props: {label: 'On', action: {deviceId: 'lights-2', capability: 'on', targetValue: true}}},
+            { type: 'ActionButton', props: {label: 'Off', action: {deviceId: 'lights-2', capability: 'on', targetValue: false}}}
           ]
         }
       ]
