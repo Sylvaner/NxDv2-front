@@ -54,7 +54,6 @@ export default defineComponent({
       if (card.height !== undefined) {
         result += `height: ${card.height};`;
       }
-      console.log(result);
       return result;
     }
   }

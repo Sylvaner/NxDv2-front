@@ -94,14 +94,23 @@ export default class NextDomApi {
     });
   }
 
-  public static setCategory(deviceId: string, category: string, config: object): Promise<any> {
-    const configData = {
-      category,
-      config
-    };
+  public static setCategory(deviceId: string, category: string): Promise<any> {
     return new Promise<Device>((resolve, reject) => {
       NextDomApi.getInstance()
-        .axiosInstance.post(`/api/device/${deviceId}/category`, configData)
+        .axiosInstance.post(`/api/device/${deviceId}/category`, {category})
+        .then((response: any) => {
+          resolve(response.data);
+        })
+        .catch((response: any) => {
+          reject(response);
+        })
+    });
+  }
+
+  public static setConfig(deviceId: string, config: any): Promise<any> {
+    return new Promise<Device>((resolve, reject) => {
+      NextDomApi.getInstance()
+        .axiosInstance.post(`/api/device/${deviceId}/category`, {config})
         .then((response: any) => {
           resolve(response.data);
         })

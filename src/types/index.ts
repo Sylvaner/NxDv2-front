@@ -1,5 +1,2 @@
-export * from './UI/card';
-export type DeviceState = {
-    deviceId: string,
-    capability: string
-}
+export * from './UI';
+export * from './Device'
