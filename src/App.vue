@@ -16,6 +16,9 @@ export default defineComponent({
 </script>
 
 <style>
+html {
+    background-color: #EEEEEE;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

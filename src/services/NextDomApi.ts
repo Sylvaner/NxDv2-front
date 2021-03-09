@@ -27,7 +27,7 @@ export interface CapabilityAccessor {
 }
 
 export interface Capabilities {
-  [capabilityName: string]: CapabilityAccessor;
+  [capability: string]: CapabilityAccessor;
 }
 
 export default class NextDomApi {

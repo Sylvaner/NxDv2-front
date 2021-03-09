@@ -1,11 +1,8 @@
 import { createStore } from 'vuex';
 
-type Capability = {
-    state: any;
-};
-
 type Device = {
-    capabilities: Record<string, Capability>
+    capabilities: { [capability: string]: any},
+    states: { [capability: string]: any}
 };
 
 export type State = {
@@ -18,14 +15,28 @@ const state: State = {
 
 export const store = createStore({
     state,
-    mutations: {},
+    mutations: {
+        addDevice(state: State, payload: any) {
+            if (!Object.keys(state.devices).includes(payload.deviceId)) {
+                state.devices[payload.deviceId] = {
+                    capabilities: {},
+                    states: {}
+                }
+            }
+        },
+        updateDeviceStates(state: State, payload: any) {
+            state.devices[payload.deviceId].states = payload.states;
+        }
+    },
     getters: {
-        deviceState: (state) => (deviceId: string, capabilityName: string) => {
-            console.log(Object.keys(state.devices));
+        deviceState: (state: State) => (deviceId: string, capability: string) => {
             if (Object.keys(state.devices).includes(deviceId)) {
-                return true;
+                return state.devices[deviceId].states[capability];
             }
             return false;
+        },
+        devices: (state: State) => () => {
+            return Object.keys(state.devices);
         }
     }
 })

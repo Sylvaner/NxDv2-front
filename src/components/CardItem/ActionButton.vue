@@ -19,7 +19,7 @@ export default defineComponent({
       required: true
     }
   },
-  computed: {
+  methods: {
     execute() {
       if (this.action.deviceId !== undefined) {
         NextDomApi.setDeviceAction(this.action.deviceId, this.action.capability, this.action.targetValue);

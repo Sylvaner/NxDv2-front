@@ -1,20 +1,16 @@
 <template>
-  <p v-if="showLabel">
+  <p v-if="label !== ''">
     {{ label }}
   </p>
   <p>{{ showState }}</p>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import { store } from '../../store/index';
+import { defineComponent } from 'vue';
+
 export default defineComponent({
   name: 'BooleanTextState',
   props: {
-    showLabel: {
-      type: Boolean,
-      required: true
-    },
     label: {
       type: String,
       required: false,
@@ -24,12 +20,12 @@ export default defineComponent({
       type: Object,
       required: true
     },
-    on: {
+    onLabel: {
       type: String,
       required: false,
       default: 'on'
     },
-    off: {
+    offLabel: {
       type: String,
       required: false,
       default: 'off'
@@ -37,7 +33,7 @@ export default defineComponent({
   },
   computed: {
     showState(): string {
-      return this.$store.getters.deviceState(this.state.deviceId, this.state.capabilityName) ? this.on : this.off;
+      return this.$store.getters.deviceState(this.state.deviceId, this.state.capability) ? this.onLabel : this.offLabel;
     }
   }
 });
