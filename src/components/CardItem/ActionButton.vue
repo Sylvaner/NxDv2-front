@@ -1,13 +1,17 @@
 <template>
-  <button @click="execute">{{ this.label }}</button>
+  <Button @click="execute">{{ this.label }}</Button>
 </template>
 
 <script lang="ts">
 import NextDomApi from '../../services/NextDomApi';
+import Button from 'primevue/button';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'ActionButton',
+  components: {
+    Button
+  },
   props: {
     label: {
       type: String,

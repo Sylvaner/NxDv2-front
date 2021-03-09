@@ -1,32 +1,38 @@
 <template>
-  <div class="card" :style="cardStyle">
-    <component
-        v-for="templateItem in template.items"
-        :key="`ci-${templateItem.id}`"
-        v-bind="templateItem.props"
-        :is="templateItem.type">
-    </component>
-  </div>
+  <Card :style="cardStyle">
+    <template #content>
+      <component
+          v-for="templateItem in template.items"
+          :key="`ci-${templateItem.id}`"
+          v-bind="templateItem.props"
+          :is="templateItem.type">
+      </component>
+    </template>>
+  </Card>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import Card from 'primevue/card';
 import Title from './CardItem/Title.vue';
 import ActionButton from './CardItem/ActionButton.vue';
 import BooleanTextState from './CardItem/BooleanTextState.vue';
 import ToggleStateIcon from './CardItem/ToggleStateIcon.vue';
 import LevelTextState from './CardItem/LevelTextState.vue';
 import SliderState from './CardItem/SliderState.vue';
+import KnobState from './CardItem/KnobState.vue';
 
 export default defineComponent({
-  name: 'Card',
+  name: 'DeviceCard',
   components: {
+    Card,
     Title,
     ActionButton,
     BooleanTextState,
     ToggleStateIcon,
     LevelTextState,
-    SliderState
+    SliderState,
+    KnobState
   },
   props: {
     template: {
@@ -61,11 +67,4 @@ export default defineComponent({
 </script>
 
 <style>
-.card {
-  border: 1px solid #CCC;
-  display: block;
-  border-radius: 0.5rem;
-  box-shadow: 4px 2px 5px 0px rgba(0,0,0,0.75);
-  background-color: white;
-}
 </style>

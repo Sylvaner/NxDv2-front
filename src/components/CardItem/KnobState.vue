@@ -1,18 +1,18 @@
 <template>
   <p v-if="label !== ''">{{ label }}</p>
-  <Slider :min="min" :max="max" :step="step" v-model="stateValue"/>
+  <Knob type="range" :min="min" :max="max" :step="step" v-model="stateValue"/>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import Knob from 'primevue/knob';
 import BaseState from './BaseState';
-import Slider from 'primevue/slider';
 
 export default defineComponent({
-  name: 'SliderState',
+  name: 'KnobState',
   mixins: [BaseState],
   components: {
-    Slider
+    Knob
   },
   props: {
     label: {

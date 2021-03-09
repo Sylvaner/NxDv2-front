@@ -1,10 +1,14 @@
 <template>
-  <DeviceManager/>
+  <div>
+    <router-link to="/">Device Manager</router-link>
+    <router-link to="/render">Render</router-link>
+  </div>
+  <router-view />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import HelloWorld from './components/HelloWorld.vue'
+import HelloWorld from './components/Render.vue'
 import DeviceManager from './components/DeviceManager.vue'
 
 export default defineComponent({

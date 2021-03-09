@@ -1,10 +1,9 @@
 <template>
-  <i @click="toggle">Icon {{ showStateIcon }}</i>
+  <i :class="showStateIcon" @click="toggle"></i>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import NextDomApi from '../../services/NextDomApi';
 import BaseState from './BaseState';
 
 export default defineComponent({
@@ -20,14 +19,6 @@ export default defineComponent({
       type: String,
       required: false,
       default: 'off'
-    },
-    setOn: {
-      type: Object,
-      required: true
-    },
-    setOff: {
-      type: Object,
-      required: true
     }
   },
   computed: {
@@ -36,13 +27,6 @@ export default defineComponent({
     }
   },
   methods: {
-      toggle() {
-        if (this.stateValue) {
-          NextDomApi.setDeviceAction(this.setOff.deviceId, this.setOff.capability, this.setOff.targetValue);
-        } else {
-          NextDomApi.setDeviceAction(this.setOn.deviceId, this.setOn.capability, this.setOn.targetValue);
-        }
-      }
   }
 });
 </script>

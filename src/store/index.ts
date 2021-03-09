@@ -33,7 +33,7 @@ export const store = createStore({
             if (Object.keys(state.devices).includes(deviceId)) {
                 return state.devices[deviceId].states[capability];
             }
-            return false;
+            return undefined;
         },
         devices: (state: State) => () => {
             return Object.keys(state.devices);

@@ -1,23 +1,17 @@
 <template>
-  <Card :template="cards[0]"></Card>
+  <DeviceCard :template="cards[0]"></DeviceCard>
 </template>
 
 <script lang="ts">
-import Card from './Card.vue';
+import DeviceCard from './DeviceCard.vue';
 import { CardTemplate } from '../types';
-import { ref, defineComponent } from 'vue'
+import { defineComponent } from 'vue'
 import StateUpdater from '../services/StateUpdater';
 
 export default defineComponent({
-  name: 'HelloWorld',
+  name: 'Render',
   components: {
-    Card
-  },
-  props: {
-    msg: {
-      type: String,
-      required: true
-    }
+    DeviceCard
   },
   data() : {
     cards: CardTemplate[]
@@ -29,18 +23,18 @@ export default defineComponent({
           card: {
             position: 'absolute',
             width: '300px',
-            height: '400px',
             x: '10%',
             y: '20px'
           },
           items: [
             { type: 'Title', props: {title: 'Mon titre' }},
             { type: 'BooleanTextState', props: {label: 'My state', onLabel: 'On', offLabel: 'Off', state: {deviceId: 'lights-2', capability: 'on'}}},
-            { type: 'ToggleStateIcon', props: {label: 'My state', onIcon: 'On', offIcon: 'Off', state: {deviceId: 'lights-2', capability: 'on'}, setOn: {deviceId: 'lights-2', capability: 'on', targetValue: true}, setOff: {deviceId: 'lights-2', capability: 'on', targetValue: false}}},
+            { type: 'ToggleStateIcon', props: {label: 'My state', state: {deviceId: 'lights-2', capability: 'on'}, onIcon: 'pi pi-check', offIcon: 'pi pi-times'}},
             { type: 'ActionButton', props: {label: 'On', action: {deviceId: 'lights-2', capability: 'on', targetValue: true}}},
             { type: 'ActionButton', props: {label: 'Off', action: {deviceId: 'lights-2', capability: 'on', targetValue: false}}},
             { type: 'LevelTextState', props: {label: 'Brightness', state: {deviceId: 'lights-2', capability: 'bri'}}},
-            { type: 'SliderState', props: {label: 'Brightness: ', min: 0, max: 255, state: {deviceId: 'lights-2', capability: 'bri'}}}
+            { type: 'SliderState', props: {label: 'Brightness: ', min: 0, max: 255, state: {deviceId: 'lights-2', capability: 'bri'}}},
+            { type: 'KnobState', props: {label: 'Brightness: ', min: 0, max: 255, state: {deviceId: 'lights-2', capability: 'bri'}}}
           ]
         }
       ]

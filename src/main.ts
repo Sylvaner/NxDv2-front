@@ -1,7 +1,16 @@
 import { createApp } from 'vue'
 import App from './App.vue'
+import PrimeVue from 'primevue/config';
 import { store } from './store'
+import router from './router';
+
+import 'primevue/resources/themes/saga-blue/theme.css';
+import 'primevue/resources/primevue.min.css';
+import 'primeicons/primeicons.css';
+import 'primeflex/primeflex.css';
 
 createApp(App)
     .use(store)
+    .use(PrimeVue)
+    .use(router)
     .mount('#app')
