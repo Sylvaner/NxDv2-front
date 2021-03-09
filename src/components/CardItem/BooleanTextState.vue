@@ -2,23 +2,21 @@
   <p v-if="label !== ''">
     {{ label }}
   </p>
-  <p>{{ showState }}</p>
+  <p>{{ stateValue }}</p>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import BaseState from './BaseState';
 
 export default defineComponent({
   name: 'BooleanTextState',
+  mixins: [BaseState],
   props: {
     label: {
       type: String,
       required: false,
       default: ''
-    },
-    state: {
-      type: Object,
-      required: true
     },
     onLabel: {
       type: String,
@@ -29,11 +27,6 @@ export default defineComponent({
       type: String,
       required: false,
       default: 'off'
-    }
-  },
-  computed: {
-    showState(): string {
-      return this.$store.getters.deviceState(this.state.deviceId, this.state.capability) ? this.onLabel : this.offLabel;
     }
   }
 });

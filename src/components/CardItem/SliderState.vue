@@ -1,14 +1,15 @@
 <template>
   <p v-if="label !== ''">{{ label }}</p>
-  <input type="range" :min="min" :max="max" :step="step" :value="stateValue" @change="update"/>
+  <input type="range" :min="min" :max="max" :step="step" :value="stateValue" @change="change"/>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import NextDomApi from '../../services/NextDomApi';
+import BaseState from './BaseState';
 
 export default defineComponent({
   name: 'SliderState',
+  mixins: [BaseState],
   props: {
     label: {
       type: String,
@@ -30,19 +31,10 @@ export default defineComponent({
       required: false,
       default: 1
     },
-    state: {
-      type: Object,
-      required: true
-    }
-  },
-  computed: {
-    stateValue(): number {
-        return this.$store.getters.deviceState(this.state.deviceId, this.state.capability);
-    }
   },
   methods: {
-    update(e: any) {
-      NextDomApi.setDeviceAction(this.state.deviceId, this.state.capability, e.target.value);
+    change(e: any) {
+      this.update(e.target.value);
     }
   }
 });

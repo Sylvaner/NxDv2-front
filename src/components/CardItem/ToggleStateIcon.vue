@@ -5,14 +5,12 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import NextDomApi from '../../services/NextDomApi';
+import BaseState from './BaseState';
 
 export default defineComponent({
   name: 'ToggleStateIcon',
+  mixins: [BaseState],
   props: {
-    state: {
-      type: Object,
-      required: true
-    },
     onIcon: {
       type: String,
       required: false,
@@ -34,12 +32,12 @@ export default defineComponent({
   },
   computed: {
     showStateIcon(): string {
-      return this.$store.getters.deviceState(this.state.deviceId, this.state.capability) ? this.onIcon : this.offIcon;
+      return this.stateValue ? this.onIcon : this.offIcon;
     }
   },
   methods: {
       toggle() {
-        if (this.$store.getters.deviceState(this.state.deviceId, this.state.capability)) {
+        if (this.stateValue) {
           NextDomApi.setDeviceAction(this.setOff.deviceId, this.setOff.capability, this.setOff.targetValue);
         } else {
           NextDomApi.setDeviceAction(this.setOn.deviceId, this.setOn.capability, this.setOn.targetValue);

@@ -1,31 +1,24 @@
 <template>
   <p v-if="label !== ''">{{ label }}</p>
-  <p>{{ showState }}<span v-if="unit !== ''"> {{ unit }}</span></p>
+  <p>{{ stateValue }}<span v-if="unit !== ''"> {{ unit }}</span></p>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import BaseState from './BaseState';
 
 export default defineComponent({
   name: 'LevelTextState',
+  mixins: [BaseState],
   props: {
     label: {
       type: String,
       required: false,
       default: ''
     },
-    state: {
-      type: Object,
-      required: true
-    },
     unit: {
       type: String,
       required: false
-    }
-  },
-  computed: {
-    showState(): string {
-      return this.$store.getters.deviceState(this.state.deviceId, this.state.capability);
     }
   }
 });
