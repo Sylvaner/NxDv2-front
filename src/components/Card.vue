@@ -1,5 +1,5 @@
 <template>
-  <div class="card">
+  <div class="card" :style="cardStyle">
     <component
         v-for="templateItem in template.items"
         :key="`ci-${templateItem.id}`"
@@ -32,6 +32,30 @@ export default defineComponent({
     template: {
       type: Object,
       required: true
+    }
+  },
+  computed: {
+    // Will change
+    cardStyle(): string {
+      const card = this.template.card;
+      let result: string = '';
+      if (card.position !== undefined) {
+        result += `position: ${card.position};`;
+        if (card.x !== undefined) {
+          result += `left: ${card.x};`;
+        }
+        if (card.y !== undefined) {
+          result += `top: ${card.y};`;
+        }
+      }
+      if (card.width !== undefined) {
+        result += `width: ${card.width};`;
+      }
+      if (card.height !== undefined) {
+        result += `height: ${card.height};`;
+      }
+      console.log(result);
+      return result;
     }
   }
 })

@@ -1,9 +1,10 @@
 <template>
-  <Card :template="templates[0]"></Card>
+  <Card :template="cards[0]"></Card>
 </template>
 
 <script lang="ts">
 import Card from './Card.vue';
+import { CardTemplate } from '../types';
 import { ref, defineComponent } from 'vue'
 import StateUpdater from '../services/StateUpdater';
 
@@ -18,11 +19,20 @@ export default defineComponent({
       required: true
     }
   },
-  data: () => {
+  data() : {
+    cards: CardTemplate[]
+  } {
     return {
-      templates: [
+      cards: [
         {
           id: 'a-test-id',
+          card: {
+            position: 'absolute',
+            width: '300px',
+            height: '400px',
+            x: '10%',
+            y: '20px'
+          },
           items: [
             { type: 'Title', props: {title: 'Mon titre' }},
             { type: 'BooleanTextState', props: {label: 'My state', onLabel: 'On', offLabel: 'Off', state: {deviceId: 'lights-2', capability: 'on'}}},
