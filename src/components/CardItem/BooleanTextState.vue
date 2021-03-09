@@ -7,6 +7,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import { store } from '../../store/index';
 export default defineComponent({
   name: 'BooleanTextState',
   props: {
@@ -19,8 +20,8 @@ export default defineComponent({
       required: false,
       default: ''
     },
-    value: {
-      type: Boolean,
+    state: {
+      type: Object,
       required: true
     },
     on: {
@@ -36,7 +37,7 @@ export default defineComponent({
   },
   computed: {
     showState(): string {
-      return this.value ? this.on : this.off;
+      return this.$store.getters.deviceState(this.state.deviceId, this.state.capabilityName) ? this.on : this.off;
     }
   }
 });

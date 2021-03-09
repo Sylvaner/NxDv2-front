@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import NextDomApi from '../../Services/NextDomApi';
+import NextDomApi from '../../services/NextDomApi';
 import { defineComponent } from 'vue';
 
 export default defineComponent({

@@ -2,6 +2,7 @@
   <Card :template="templates[0]"></Card>
 
   <button @click="count++">count is: {{ count }}</button>
+  {{ test }}
 </template>
 
 <script lang="ts">
@@ -26,7 +27,7 @@ export default defineComponent({
           id: 'a-test-id',
           items: [
             { type: 'Title', props: {title: 'Mon titre' }},
-            { type: 'BooleanTextState', props: {showLabel: true, label: 'My state', on: 'On', off: 'Off', value: true}},
+            { type: 'BooleanTextState', props: {showLabel: true, label: 'My state', on: 'On', off: 'Off', state: {deviceId: 'lights-2', capabilityName: 'on'}}},
             { type: 'ActionButton', props: {label: 'On', action: {deviceId: 'lights-2', capability: 'on', targetValue: true}}},
             { type: 'ActionButton', props: {label: 'Off', action: {deviceId: 'lights-2', capability: 'on', targetValue: false}}}
           ]
@@ -37,6 +38,11 @@ export default defineComponent({
   setup: () => {
     const count = ref(0)
     return { count }
+  },
+  computed: {
+    test(): number {
+      return this.$store.getters.aaa;
+    }
   }
 })
 </script>
