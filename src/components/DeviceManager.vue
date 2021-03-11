@@ -40,17 +40,20 @@
       </li>
     </ul>
   </div>
+  <ChangeDeviceCategory />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { Device } from '../types';
+import mitt, { Emitter } from 'mitt';
 import NextDomApi, { Capabilities } from '../services/NextDomApi';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Button from 'primevue/button';
 import DataView from 'primevue/dataview';
 import Card from 'primevue/card';
+import ChangeDeviceCategory from './Dialog/ChangeDeviceCategory.vue';
 
 export default defineComponent({
   components: {
@@ -58,15 +61,20 @@ export default defineComponent({
     Column,
     DataTable,
     DataView,
-    Card
+    Card,
+    ChangeDeviceCategory
   },
   data(): {
     devices: Device[],
-    expandedRows: Boolean[]
+    expandedRows: Boolean[],
+    changeDeviceCategoryDialogShowed: Boolean,
+    emitter: Emitter
   } {
     return {
       devices: [],
-      expandedRows: []
+      expandedRows: [],
+      changeDeviceCategoryDialogShowed: false,
+      emitter: mitt()
     }
   },
   mounted() {
@@ -98,7 +106,7 @@ export default defineComponent({
       return result;
     },
     changeDeviceCategory(data: any) {
-      console.log(data);
+      this.eventBus.emit('showChangeDeviceCategoryDialog', data);
     }
   },
   computed: {

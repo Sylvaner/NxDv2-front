@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
+    "mitt": "^2.1.0",
     "primeflex": "^2.0.0",
     "primeicons": "^4.1.0",
     "primevue": "^3.3.4",
