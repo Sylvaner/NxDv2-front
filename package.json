@@ -8,6 +8,7 @@
     "debug": "vite --debug"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.2",
     "axios": "^0.21.1",
     "mitt": "^2.1.0",
     "primeflex": "^2.0.0",
