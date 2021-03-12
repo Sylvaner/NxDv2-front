@@ -1,21 +1,21 @@
 <template>
-  <div>
-    <router-link to="/">Device Manager</router-link>
-    <router-link to="/render">Render</router-link>
-  </div>
+  <TopMenu />
   <router-view />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import HelloWorld from './components/Render.vue'
-import DeviceManager from './components/DeviceManager.vue'
+import TopMenu from './components/TopMenu.vue';
+import StateUpdater from './services/StateUpdater';
 
 export default defineComponent({
   name: 'App',
   components: {
-    HelloWorld,
-    DeviceManager
+    TopMenu
+  },
+  mounted() {
+    const stateUpdater = new StateUpdater();
+    stateUpdater.start();
   }
 })
 </script>

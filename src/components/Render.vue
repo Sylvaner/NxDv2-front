@@ -6,7 +6,6 @@
 import DeviceCard from './DeviceCard.vue';
 import { CardTemplate } from '../types';
 import { defineComponent } from 'vue'
-import StateUpdater from '../services/StateUpdater';
 
 export default defineComponent({
   name: 'Render',
@@ -26,6 +25,7 @@ export default defineComponent({
             x: '10%',
             y: '20px'
           },
+          devices: ['lights-2'],
           items: [
             { type: 'Title', props: {title: 'Mon titre' }},
             { type: 'BooleanTextState', props: {label: 'My state', onLabel: 'On', offLabel: 'Off', state: {deviceId: 'lights-2', capability: 'on'}}},
@@ -41,11 +41,13 @@ export default defineComponent({
     }
   },
   mounted() {
-    this.$store.commit('addDevice', {
-      deviceId: 'lights-2'
-    });
-    const stateUpdater = new StateUpdater();
-    stateUpdater.start();
+    for (const cards of this.cards) {
+      for (const deviceId of cards.devices) {
+        this.$store.commit('addDeviceState', {
+          deviceId
+        });
+      }
+    }
   }
 })
 </script>

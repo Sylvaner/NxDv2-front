@@ -7,8 +7,11 @@ export default class StateUpdater {
      */
     public start() {
         const store = useStore();
+        NextDomApi.getDevices().then((devices) => {
+            store.commit('updatesDevices', devices);
+        })
         setInterval(() => {
-            const devicesId = store.getters.devices();
+            const devicesId = store.getters.devicesToUpdate();
             for (const deviceId of devicesId) {
                 NextDomApi.getDeviceState(deviceId).then((states) => {
                     store.commit('updateDeviceStates', {

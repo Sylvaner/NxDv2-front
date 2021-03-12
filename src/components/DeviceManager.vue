@@ -40,7 +40,7 @@
       </li>
     </ul>
   </div>
-  <ChangeDeviceCategory />
+  <ChangeDeviceCategory v-on:change="updateDevices"/>
 </template>
 
 <script lang="ts">
@@ -65,29 +65,25 @@ export default defineComponent({
     ChangeDeviceCategory
   },
   data(): {
-    devices: Device[],
     expandedRows: Boolean[],
     changeDeviceCategoryDialogShowed: Boolean,
     emitter: Emitter
   } {
     return {
-      devices: [],
       expandedRows: [],
       changeDeviceCategoryDialogShowed: false,
       emitter: mitt()
     }
   },
-  mounted() {
-    this.updateDevices();
-  },
   methods: {
     updateDevices() {
       NextDomApi.getDevices().then((devices) => {
-        this.devices = devices;
+        this.$store.commit('updatesDevices', devices);
       });
     },
     devicesByCategory(category: string): Device[] {
-      return this.devices.filter(device => device.category === category);
+      const devices: Device[] = Object.values(this.$store.getters.devices());
+      return devices.filter(device => device.category === category);
     },
     setDeviceCategory(device: Device, category: string) {
       device.category = category;
@@ -111,8 +107,10 @@ export default defineComponent({
   },
   computed: {
     definedCategories(): string[] {
+      const devices: Device[] = Object.values(this.$store.getters.devices());
+      const deviceWithcategory = devices.filter((device: Device) => device.category !== 'unknown');
       // [...new Set()] pour supprimer les doublons
-      return [...new Set(this.devices.filter(device => device.category !== 'unknown').map(device => device.category))];
+      return [...new Set(deviceWithcategory.map((device: Device) => device.category))];
     },
     unknownDevices(): Device[] {
       return this.devicesByCategory('unknown');

@@ -23,6 +23,7 @@ import Dialog from 'primevue/dialog';
 import { Device } from '../../types';
 import Button from 'primevue/button';
 import Listbox from 'primevue/listbox';
+import NextDomApi from '../../services/NextDomApi';
 
 interface CategoryDesc {
   code?: string;
@@ -43,17 +44,18 @@ export default defineComponent({
     categories: { [code: string]: CategoryDesc }
     directPoints: { [key: string]: { [name: string]: number } },
     linkedPoints: { [key: string]: any },
-    selectedCategory: string
+    selectedCategory: string,
+    deviceId: string
   } {
     return {
       showed: false,
       categories: {
         light: { name: 'Light', icon: 'fa fa-lightbulb', score: 0},
         wallPlug: { name: 'Wall Plug', icon: 'fa fa-plug', score: 0},
-        remoteControl: { name: 'Remote control', icon: '', score: 0},
+        remoteControl: { name: 'Remote control', icon: 'fa fa-gamepad', score: 0},
         doorSensor: { name: 'Door sensor', icon: 'fa fa-door-open', score: 0},
-        motionSensor: { name: 'Motion sensor', icon: 'fa fa-door-open', score: 0},
-        other: { name: 'Others', icon: 'fa fa-door-open', score: 0}
+        motionSensor: { name: 'Motion sensor', icon: 'fa fa-running', score: 0},
+        other: { name: 'Others', icon: 'fa fa-question', score: 0}
       },
       directPoints: {
         on: {light: 1, wallPlug: 1},
@@ -64,7 +66,8 @@ export default defineComponent({
       linkedPoints: {
         ct: {links: ['bri'], target: 'light', score: 10}
       },
-      selectedCategory: ''
+      selectedCategory: '',
+      deviceId: ''
     }
   },
   mounted() {
@@ -74,6 +77,7 @@ export default defineComponent({
     showDialog(deviceData: Device) {
       this.resetScores();
       this.scoring(deviceData);
+      this.deviceId = deviceData.id;
       this.showed = true;
       this.selectedCategory = this.sortedCategories[0].code!;
     },
@@ -118,7 +122,10 @@ export default defineComponent({
       }
     },
     validChoice() {
-      console.log(this.selectedCategory);
+      NextDomApi.setCategory(this.deviceId, this.selectedCategory).then(() => {
+        this.$emit('change');
+        this.showed = false;
+      });
     }
   },
   computed: {

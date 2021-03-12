@@ -1,7 +1,8 @@
 export interface CardTemplate {
-    id: string,
-    card: CardConfig,
-    items: any[]
+    id: string;
+    card: CardConfig;
+    devices: string[];
+    items: any[];
 }
 
 export interface CardConfig {

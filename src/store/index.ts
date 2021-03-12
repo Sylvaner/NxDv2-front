@@ -1,42 +1,48 @@
 import { createStore } from 'vuex';
+import { Device, DeviceState } from '../types';
 
-type Device = {
-    capabilities: { [capability: string]: any},
-    states: { [capability: string]: any}
-};
+interface DeviceList { [deviceId: string]: Device};
 
 export type State = {
-    devices: { [deviceId: string]: Device }
+    devices: DeviceList
+    states: { [deviceid: string]: DeviceState}
 };
 
 const state: State = {
-    devices: {}
+    devices: {},
+    states: {}
 };
 
 export const store = createStore({
     state,
     mutations: {
-        addDevice(state: State, payload: any) {
+        updatesDevices(state: State, devices: Device[]) {
+            state.devices = devices.reduce((result: DeviceList, currentDevice) => {
+                result[currentDevice.id] = currentDevice;
+                return result;
+            }, {});
+        },
+        addDeviceState(state: State, payload: any) {
             if (!Object.keys(state.devices).includes(payload.deviceId)) {
-                state.devices[payload.deviceId] = {
-                    capabilities: {},
-                    states: {}
-                }
+                state.states[payload.deviceId] = {deviceId: payload.deviceId}
             }
         },
         updateDeviceStates(state: State, payload: any) {
-            state.devices[payload.deviceId].states = payload.states;
+            state.states[payload.deviceId] = payload.states;
         }
     },
     getters: {
         deviceState: (state: State) => (deviceId: string, capability: string) => {
-            if (Object.keys(state.devices).includes(deviceId)) {
-                return state.devices[deviceId].states[capability];
+            if (Object.keys(state.states).includes(deviceId)) {
+                return state.states[deviceId][capability];
             }
             return undefined;
         },
+        devicesToUpdate: (state: State) => () => {
+            return Object.keys(state.states);
+        },
         devices: (state: State) => () => {
-            return Object.keys(state.devices);
+            return state.devices;
         }
     }
 })

@@ -13,5 +13,5 @@ export type Device = {
 
 export type DeviceState = {
     deviceId: string,
-    capability: string
+    [capabilityName: string]: any
 }
