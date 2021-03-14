@@ -1,7 +1,7 @@
 <template>
   <div v-for="category in definedCategories" :key="`cat-${category}`" class="devices-category">
     <h2>{{ category }}</h2>
-    <DataView :value="devicesByCategory(category)" layout="grid">
+    <DataView :value="$store.getters.devicesByCategory(category)" layout="grid">
       <template #grid="slotProps">
         <div class="p-col-12 p-md-4">
           <Card>
@@ -21,13 +21,13 @@
       <Column field="name" header="Name" sortable></Column>
       <Column headerStyle="width: 4rem; text-align: center" bodyStyle="text-align: center; overflow: visible">
         <template #body="{data}">
-          <Button type="button" icon="pi pi-cog" @click="changeDeviceCategory(data)"></Button>
+          <Button type="button" icon="pi pi-cog" @click="showChangeDeviceCategoryDialog(data)"></Button>
         </template>
       </Column>
       <template #expansion="slotProps">
         <div class="expanded-datatable">
           <h5>Capabilities of {{slotProps.data.name}}</h5>
-          <DataTable :value="capabilitiesToDataTable(slotProps.data.capabilities)">
+          <DataTable :value="convertCapabilitiesToDataTableFormat(slotProps.data.capabilities)">
             <Column field="name" header="Name" sortable></Column>
             <Column field="access.get.topic" header="Topic" sortable></Column>
           </DataTable>
@@ -66,12 +66,12 @@ export default defineComponent({
   },
   data(): {
     expandedRows: Boolean[],
-    changeDeviceCategoryDialogShowed: Boolean,
+    showChangeDeviceCategoryDialogDialogShowed: Boolean,
     emitter: Emitter
   } {
     return {
       expandedRows: [],
-      changeDeviceCategoryDialogShowed: false,
+      showChangeDeviceCategoryDialogDialogShowed: false,
       emitter: mitt()
     }
   },
@@ -81,17 +81,13 @@ export default defineComponent({
         this.$store.commit('updatesDevices', devices);
       });
     },
-    devicesByCategory(category: string): Device[] {
-      const devices: Device[] = Object.values(this.$store.getters.devices());
-      return devices.filter(device => device.category === category);
-    },
     setDeviceCategory(device: Device, category: string) {
       device.category = category;
       NextDomApi.setCategory(device.id, category).then(() => {
         this.updateDevices();
       });
     },
-    capabilitiesToDataTable(capabilities: Capabilities) {
+    convertCapabilitiesToDataTableFormat(capabilities: Capabilities) {
       const result = [];
       for (let name in capabilities) {
         result.push({
@@ -101,7 +97,7 @@ export default defineComponent({
       }
       return result;
     },
-    changeDeviceCategory(data: any) {
+    showChangeDeviceCategoryDialog(data: any) {
       this.eventBus.emit('showChangeDeviceCategoryDialog', data);
     }
   },
@@ -113,7 +109,7 @@ export default defineComponent({
       return [...new Set(deviceWithcategory.map((device: Device) => device.category))];
     },
     unknownDevices(): Device[] {
-      return this.devicesByCategory('unknown');
+      return this.$store.getters.devicesByCategory('unknown');
     }
   }
 })

@@ -1,5 +1,5 @@
 import { createStore } from 'vuex';
-import { Device, DeviceState } from '../types';
+import { Device, DeviceState } from '../services/NextDomApi';
 
 interface DeviceList { [deviceId: string]: Device};
 
@@ -40,6 +40,14 @@ export const store = createStore({
         },
         devicesToUpdate: (state: State) => () => {
             return Object.keys(state.states);
+        },
+        devicesByCategory: (state: State) => (category: string): Device[] => {
+            return Object.values(state.devices).filter(device => device.category === category);
+        },
+        devicesToManage: (state: State, getters: any) => () => {
+            return getters.devicesByCategory('unknown').filter((device: Device) => {
+                return !(device.config !== undefined && device.config.hidden === true);
+            });
         },
         devices: (state: State) => () => {
             return state.devices;

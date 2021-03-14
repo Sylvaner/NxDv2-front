@@ -8,8 +8,9 @@ export interface Device {
   config: Record<string, any>;
 }
 
-interface DeviceState {
-  state: boolean;
+export interface DeviceState {
+  deviceId: string,
+  [capabilityName: string]: any
 }
 
 type MqttFormat = "raw" | "json";
