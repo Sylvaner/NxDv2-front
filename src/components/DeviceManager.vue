@@ -1,6 +1,5 @@
 <template>
-  <div v-for="category in definedCategories" :key="`cat-${category}`" class="devices-category">
-    <h2>{{ category }}</h2>
+  <Panel v-for="category in definedCategories" :key="`cat-${category}`" :header="category" toggleable>
     <DataView :value="$store.getters.devicesByCategory(category)" layout="grid">
       <template #grid="slotProps">
         <div class="p-col-12 p-md-4">
@@ -12,13 +11,17 @@
         </div>
       </template>
     </DataView>
-  </div>
-  <div v-if="unknownDevices.length > 0">
-    <h2>Unknown devices</h2>
-    <DataTable :value="unknownDevices" v-model:expandedRows="expandedRows" dataKey="_id">
+  </Panel>
+  <Panel v-if="$store.getters.devicesToManage(showHiddenDevices).length > 0" header="Devices to manage" toggleable>
+    <DataTable :value="$store.getters.devicesToManage(showHiddenDevices)" v-model:expandedRows="expandedRows" dataKey="_id">
       <Column :expander="true" headerStyle="width: 3rem" />
       <Column field="id" header="id" sortable></Column>      
       <Column field="name" header="Name" sortable></Column>
+      <Column headerStyle="width: 4rem; text-align: center" bodyStyle="text-align: center; overflow: visible">
+        <template #body="{data}">
+          <Button type="button" icon="pi pi-eye-slash" @click="hideDevice(data)"></Button>
+        </template>
+      </Column>
       <Column headerStyle="width: 4rem; text-align: center" bodyStyle="text-align: center; overflow: visible">
         <template #body="{data}">
           <Button type="button" icon="pi pi-cog" @click="showChangeDeviceCategoryDialog(data)"></Button>
@@ -34,18 +37,21 @@
         </div>
       </template>
     </DataTable>
-    <ul>
-      <li v-for="device in unknownDevices" :key="device._id">
-        <span>{{ device.name }}</span>
-      </li>
-    </ul>
-  </div>
+  </Panel>
+
+  <Button class="sidebar-fab" id="sidebar-fab-onpage" type="button" icon="pi pi-cog" @click="sidebarShowed = !sidebarShowed"></Button>
+  <Sidebar v-model:visible="sidebarShowed" position="right">
+    <h3>Show hidden devices</h3>
+    <InputSwitch v-model="showHiddenDevices" />
+    <Button class="sidebar-fab" id="sidebar-fab-onbar" type="button" icon="pi pi-cog" @click="sidebarShowed = !sidebarShowed"></Button>
+  </Sidebar>
+  <ConfirmDialog></ConfirmDialog>
   <ChangeDeviceCategory v-on:change="updateDevices"/>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { Device } from '../types';
+import { Device } from '../services/NextDomApi';
 import mitt, { Emitter } from 'mitt';
 import NextDomApi, { Capabilities } from '../services/NextDomApi';
 import DataTable from 'primevue/datatable';
@@ -54,6 +60,10 @@ import Button from 'primevue/button';
 import DataView from 'primevue/dataview';
 import Card from 'primevue/card';
 import ChangeDeviceCategory from './Dialog/ChangeDeviceCategory.vue';
+import ConfirmDialog from 'primevue/confirmdialog';
+import Sidebar from 'primevue/sidebar';
+import InputSwitch from 'primevue/inputswitch';
+import Panel from 'primevue/panel';
 
 export default defineComponent({
   components: {
@@ -62,17 +72,25 @@ export default defineComponent({
     DataTable,
     DataView,
     Card,
-    ChangeDeviceCategory
+    ChangeDeviceCategory,
+    ConfirmDialog,
+    Sidebar,
+    InputSwitch,
+    Panel
   },
   data(): {
     expandedRows: Boolean[],
     showChangeDeviceCategoryDialogDialogShowed: Boolean,
-    emitter: Emitter
+    emitter: Emitter,
+    sidebarShowed: Boolean,
+    showHiddenDevices: Boolean
   } {
     return {
       expandedRows: [],
       showChangeDeviceCategoryDialogDialogShowed: false,
-      emitter: mitt()
+      emitter: mitt(),
+      sidebarShowed: false,
+      showHiddenDevices: false
     }
   },
   methods: {
@@ -99,6 +117,23 @@ export default defineComponent({
     },
     showChangeDeviceCategoryDialog(data: any) {
       this.eventBus.emit('showChangeDeviceCategoryDialog', data);
+    },
+    hideDevice(data: Device) {
+      this.$confirm.require({
+        message: 'Do you want to hide this device ?',
+        header: 'Confirmation',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+          if (data.config === undefined) {
+            data.config = {};
+          }
+          data.config['hidden'] = true;
+          NextDomApi.setConfig(data.id, data.config).then(() => this.updateDevices());
+        },
+        reject: () => {
+          this.$confirm.close();
+        }
+      })
     }
   },
   computed: {
@@ -107,9 +142,6 @@ export default defineComponent({
       const deviceWithcategory = devices.filter((device: Device) => device.category !== 'unknown');
       // [...new Set()] pour supprimer les doublons
       return [...new Set(deviceWithcategory.map((device: Device) => device.category))];
-    },
-    unknownDevices(): Device[] {
-      return this.$store.getters.devicesByCategory('unknown');
     }
   }
 })
@@ -122,5 +154,28 @@ export default defineComponent({
 
 .devices-category .p-col-12 {
   padding: 1rem !important;
+}
+
+.sidebar-fab {
+  height: 3rem;
+  width: 3rem !important;
+  border-radius: 1rem 0px 0px 1rem !important;
+  z-index: 999;
+}
+
+.sidebar-fab span.pi {
+  font-size: 1.5rem;
+}
+
+#sidebar-fab-onpage {
+  position: fixed !important;
+  top: 5rem;
+  right: 0;
+}
+
+#sidebar-fab-onbar {
+  position: absolute !important;
+  top: 4rem;
+  left: -4rem;
 }
 </style>

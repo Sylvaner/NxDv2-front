@@ -17,7 +17,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import Badge from 'primevue/badge';
-import { Device } from '../services/NextDomApi';
 
 export default defineComponent({
     name: 'TopMenu',
@@ -29,7 +28,6 @@ export default defineComponent({
        * Les périphériques de type inconnus qui n'ont pas été cachés par l'utilisateur
        */
       devicesToManageCount() {
-        console.log(this.$store.getters.devicesToManage());
         return this.$store.getters.devicesToManage().length;
       }
     }

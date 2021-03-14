@@ -11,6 +11,7 @@ import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
 import '@fortawesome/fontawesome-free/css/all.css'
 import '@fortawesome/fontawesome-free/js/all.js'
+import ConfirmationService from 'primevue/confirmationservice';
 
 const eventBus = mitt();
 
@@ -19,4 +20,5 @@ app.config.globalProperties.eventBus = eventBus;
 app.use(store)
    .use(PrimeVue)
    .use(router)
+   .use(ConfirmationService)
    .mount('#app')

@@ -44,10 +44,14 @@ export const store = createStore({
         devicesByCategory: (state: State) => (category: string): Device[] => {
             return Object.values(state.devices).filter(device => device.category === category);
         },
-        devicesToManage: (state: State, getters: any) => () => {
-            return getters.devicesByCategory('unknown').filter((device: Device) => {
-                return !(device.config !== undefined && device.config.hidden === true);
-            });
+        devicesToManage: (state: State, getters: any) => (showHiddenDevices: Boolean) => {
+            const unknownDevices = getters.devicesByCategory('unknown');
+            if (!showHiddenDevices) {
+                return unknownDevices.filter((device: Device) => {
+                    return !(device.config !== undefined && device.config.hidden === true);
+                });
+            }
+            return unknownDevices;
         },
         devices: (state: State) => () => {
             return state.devices;
