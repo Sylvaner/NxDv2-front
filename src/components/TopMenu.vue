@@ -1,20 +1,74 @@
 <template>
-    <nav>
-        <span>
-            <i class="fa fa-cubes"></i>
-            <router-link to="/">Device Manager</router-link>
-        </span>
-        <span>
-            <i class="fa fa-desktop"></i>
-            <router-link to="/render">Render</router-link>
-        </span>
-    </nav>
+  <nav>
+    <router-link to="/" custom v-slot="{ href, isActive }">
+      <a :class="isActive ? 'active' : ''" :href="href">
+        <i class="fa fa-cubes fa-fw"></i>Device Manager<Badge :value="devicesToManage"></Badge>
+      </a>
+    </router-link>
+    <router-link to="/render" custom v-slot="{ href, isActive }">
+      <a :class="isActive ? 'active' : ''" :href="href">
+        <i class="fa fa-desktop fa-fw"></i>Render
+      </a>
+    </router-link>
+  </nav>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import Badge from 'primevue/badge';
+import { Device } from '../services/NextDomApi';
 
 export default defineComponent({
-    name: 'TopMenu'
+    name: 'TopMenu',
+    components: {
+        Badge
+    },
+    computed: {
+      /**
+       * Les périphériques de type inconnus qui n'ont pas été cachés par l'utilisateur
+       */
+      devicesToManage() {
+        return this.$store.getters.devicesByCategory('unknown').filter((device: Device) => {
+          device.config.hidden !== true
+        }).length;
+      }
+    }
 });
 </script>
+
+<style>
+nav {
+    font-family: sans-serif;
+    width: 100%;
+    text-align: center;
+    background-color: white;
+}
+
+nav a {
+    display: inline-block;
+    width: 10rem;
+    height: 3rem;
+    line-height: 3rem;
+    font-size: 1rem;
+    margin: 0 1rem;
+    text-decoration: none;
+    color: black;
+}
+
+nav a.active {
+    border-bottom: 1px solid black;
+}
+
+nav a:hover {
+    border-bottom: 2px solid black;
+    background-color: #EEEEEE;
+}
+
+nav .fa-fw {
+    margin-right: 0.5rem;
+}
+
+nav .p-badge {
+    position: absolute;
+}
+</style>

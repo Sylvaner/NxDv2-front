@@ -41,6 +41,9 @@ export const store = createStore({
         devicesToUpdate: (state: State) => () => {
             return Object.keys(state.states);
         },
+        devicesByCategory: (state: State) => (category: string): Device[] => {
+            return Object.values(state.devices).filter(device => device.category === category);
+        },
         devices: (state: State) => () => {
             return state.devices;
         }
