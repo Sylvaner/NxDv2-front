@@ -14,8 +14,7 @@ export default defineComponent({
     TopMenu
   },
   mounted() {
-    const stateUpdater = new StateUpdater();
-    stateUpdater.start();
+    StateUpdater.start(this.$store);
   }
 })
 </script>

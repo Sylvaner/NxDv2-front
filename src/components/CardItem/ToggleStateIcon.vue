@@ -1,5 +1,5 @@
 <template>
-  <i :class="showStateIcon" @click="toggle"></i>
+  <i :class="['device-state-icon', showStateIcon]" @click="toggle"></i>
 </template>
 
 <script lang="ts">
@@ -25,8 +25,15 @@ export default defineComponent({
     showStateIcon(): string {
       return this.stateValue ? this.onIcon : this.offIcon;
     }
-  },
-  methods: {
   }
 });
 </script>
+
+<style>
+i.device-state-icon {
+  display: block;
+  text-align: center;
+  font-size: 2rem;
+  margin: 0.5rem 0;
+}
+</style>

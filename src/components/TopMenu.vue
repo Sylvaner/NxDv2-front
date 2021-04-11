@@ -1,15 +1,17 @@
 <template>
   <nav>
-    <router-link to="/" custom v-slot="{ href, isActive }">
-      <a :class="isActive ? 'active' : ''" :href="href">
-        <i class="fa fa-cubes fa-fw"></i>Device Manager
-        <Badge v-if="devicesToManageCount > 0" :value="devicesToManageCount" severity="warning" />
-      </a>
+    <router-link
+      to="/" v-slot="{ href, navigate, isActive, isExactActive }" custom>
+        <a :href="href" :class="[isActive && 'router-link-active', isExactActive && 'router-link-exact-active']" @click="navigate">
+          <i class="fa fa-cubes fa-fw"></i>Device Manager
+          <Badge v-if="devicesToManageCount > 0" :value="devicesToManageCount" severity="warning" />
+        </a>
     </router-link>
-    <router-link to="/render" custom v-slot="{ href, isActive }">
-      <a :class="isActive ? 'active' : ''" :href="href">
-        <i class="fa fa-desktop fa-fw"></i>Render
-      </a>
+    <router-link
+      to="/render" v-slot="{ href, navigate, isActive, isExactActive }" custom>
+        <a :href="href" :class="[isActive && 'router-link-active', isExactActive && 'router-link-exact-active']" @click="navigate">
+          <i class="fa fa-desktop fa-fw"></i>Render
+        </a>
     </router-link>
   </nav>
 </template>

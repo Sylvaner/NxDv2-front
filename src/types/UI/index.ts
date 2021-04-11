@@ -12,3 +12,11 @@ export interface CardConfig {
     x?: string,
     y?: string
 }
+
+type RenderMode = 'fixed';
+
+export interface RenderTemplate {
+    mode: RenderMode,
+    name: string,
+    cards: CardTemplate[]    
+}

@@ -12,8 +12,22 @@ import 'primeflex/primeflex.css';
 import '@fortawesome/fontawesome-free/css/all.css'
 import '@fortawesome/fontawesome-free/js/all.js'
 import ConfirmationService from 'primevue/confirmationservice';
+import NextDomApi from './services/NextDomApi';
 
 const eventBus = mitt();
+await NextDomApi.getInstance().connectFromCache(store);
+
+router.beforeEach((to, from, next) => {
+   if (store.getters.isConnected()) {
+      next();
+   } else {
+      if (to.name !== 'Login') {
+         next('/login');
+      } else {
+         next();
+      }
+   }
+});
 
 const app = createApp(App);
 app.config.globalProperties.eventBus = eventBus;

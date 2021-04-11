@@ -40,6 +40,9 @@ export default defineComponent({
       required: true
     }
   },
+  mounted() {
+    console.log(this.template);
+  },
   computed: {
     // Will change
     cardStyle(): string {

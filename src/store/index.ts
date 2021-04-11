@@ -1,21 +1,27 @@
 import { createStore } from 'vuex';
-import { Device, DeviceState } from '../services/NextDomApi';
+import { Device, DeviceState, Credentials } from '../services/NextDomApi';
 
 interface DeviceList { [deviceId: string]: Device};
 
 export type State = {
     devices: DeviceList
     states: { [deviceid: string]: DeviceState}
+    credentials: Credentials
 };
 
 const state: State = {
     devices: {},
-    states: {}
+    states: {},
+    credentials: {server: ''}
 };
 
 export const store = createStore({
     state,
     mutations: {
+        credentials(state: State, credentials: Credentials) {
+            state.credentials = credentials;
+            localStorage.setItem('credentials', JSON.stringify(credentials));
+        },
         updatesDevices(state: State, devices: Device[]) {
             state.devices = devices.reduce((result: DeviceList, currentDevice) => {
                 result[currentDevice.id] = currentDevice;
@@ -55,6 +61,9 @@ export const store = createStore({
         },
         devices: (state: State) => () => {
             return state.devices;
+        },
+        isConnected: (state: State) => () => {
+            return state.credentials.server !== '';
         }
     }
 })

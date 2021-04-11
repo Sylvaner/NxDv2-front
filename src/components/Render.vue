@@ -1,15 +1,18 @@
 <template>
   <DeviceCard :template="cards[0]"></DeviceCard>
+  <AddDeviceCardWizard />
 </template>
 
 <script lang="ts">
 import DeviceCard from './DeviceCard.vue';
+import AddDeviceCardWizard from './Dialog/AddDeviceCardWizard.vue';
 import { CardTemplate } from '../types';
 import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'Render',
   components: {
+    AddDeviceCardWizard,
     DeviceCard
   },
   data() : {

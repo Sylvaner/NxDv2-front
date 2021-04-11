@@ -1,5 +1,5 @@
 <template>
-  <h1>{{ title }}</h1>
+  <h2 class="device-title">{{ title }}</h2>
 </template>
 
 <script lang="ts">
@@ -14,3 +14,10 @@ export default defineComponent({
   }
 })
 </script>
+
+<style>
+.device-title {
+  text-align: center;
+  margin: 0;
+}
+</style>
