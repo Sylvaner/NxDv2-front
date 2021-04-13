@@ -6,12 +6,14 @@ interface DeviceList { [deviceId: string]: Device};
 export type State = {
     devices: DeviceList
     states: { [deviceid: string]: DeviceState}
+    renderCards: any[]
     credentials: Credentials
 };
 
 const state: State = {
     devices: {},
     states: {},
+    renderCards: [],
     credentials: {server: ''}
 };
 
@@ -28,13 +30,23 @@ export const store = createStore({
                 return result;
             }, {});
         },
-        addDeviceState(state: State, payload: any) {
-            if (!Object.keys(state.devices).includes(payload.deviceId)) {
-                state.states[payload.deviceId] = {deviceId: payload.deviceId}
+        addDeviceState(state: State, deviceId: any) {
+            console.log('addDeviceState on ' + deviceId);
+            console.log(state.devices);
+            if (!Object.keys(state.states).includes(deviceId)) {
+                console.log('Add ' + deviceId);
+                state.states[deviceId] = {deviceId: deviceId}
             }
         },
         updateDeviceStates(state: State, payload: any) {
             state.states[payload.deviceId] = payload.states;
+        },
+        addRenderCard(state: State, renderCard: any) {
+            state.renderCards.push(renderCard);
+            console.log(renderCard);
+            for (const deviceId of renderCard.devices) {
+              store.commit('addDeviceState', deviceId);
+            }
         }
     },
     getters: {
@@ -64,6 +76,9 @@ export const store = createStore({
         },
         isConnected: (state: State) => () => {
             return state.credentials.server !== '';
+        },
+        renderCards: (state: State) => () => {
+            return state.renderCards;
         }
     }
 })

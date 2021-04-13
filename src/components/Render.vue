@@ -1,5 +1,5 @@
 <template>
-  <DeviceCard :template="cards[0]"></DeviceCard>
+  <DeviceCard v-for="card in $store.getters.renderCards()" :key="card.id" :template="card"></DeviceCard>
   <AddDeviceCardWizard />
 </template>
 
@@ -7,7 +7,8 @@
 import DeviceCard from './DeviceCard.vue';
 import AddDeviceCardWizard from './Dialog/AddDeviceCardWizard.vue';
 import { CardTemplate } from '../types';
-import { defineComponent } from 'vue'
+import { defineComponent } from 'vue';
+import StateUpdater from '../services/StateUpdater';
 
 export default defineComponent({
   name: 'Render',
@@ -19,8 +20,11 @@ export default defineComponent({
     cards: CardTemplate[]
   } {
     return {
-      cards: [
-        {
+      cards: []
+    }
+  },
+  created() {
+    this.$store.commit('addRenderCard', {
           id: 'a-test-id',
           card: {
             position: 'absolute',
@@ -40,17 +44,8 @@ export default defineComponent({
             { type: 'KnobState', props: {label: 'Brightness: ', min: 0, max: 255, state: {deviceId: 'lights-2', capability: 'bri'}}}
           ]
         }
-      ]
-    }
-  },
-  mounted() {
-    for (const cards of this.cards) {
-      for (const deviceId of cards.devices) {
-        this.$store.commit('addDeviceState', {
-          deviceId
-        });
-      }
-    }
+    );
+    StateUpdater.start(this.$store);
   }
 })
 </script>

@@ -1,4 +1,5 @@
 <template>
+  <h4 v-if="label !== ''">{{ label }}</h4>
   <i :class="['device-state-icon', showStateIcon]" @click="toggle"></i>
 </template>
 
@@ -19,6 +20,11 @@ export default defineComponent({
       type: String,
       required: false,
       default: 'off'
+    },
+    label: {
+      type: String,
+      required: false,
+      default: ''
     }
   },
   computed: {

@@ -5,6 +5,11 @@ export default {
     state: {
       type: Object,
       required: true
+    },
+    enabled: {
+      type: Boolean,
+      required: false,
+      default: true
     }
   },
   computed: {
@@ -23,7 +28,9 @@ export default {
   },
   methods: {
     update(newValue: any) {
-      NextDomApi.setDeviceAction(this.state.deviceId, this.state.capability, newValue);
+      if (this.enabled) {
+        NextDomApi.setDeviceAction(this.state.deviceId, this.state.capability, newValue);
+      }
     },
     toggle() {
       this.update(!this.stateValue);
