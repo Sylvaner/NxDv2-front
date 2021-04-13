@@ -1,31 +1,34 @@
 <template>
     <h4>Label</h4>
     <InputText v-model="modelValue.config[currentStep].label" />
-    <h4>On</h4>
-    <Listbox v-model="modelValue.config[currentStep].onIcon" :options="icons">
-        <template #option="slotProps">
-            <i :class="slotProps.option"></i>
-        </template>
-    </Listbox>
-    <h4>Off</h4>
-    <Listbox v-model="modelValue.config[currentStep].offIcon" :options="icons">
-        <template #option="slotProps">
-            <i :class="slotProps.option"></i>
-        </template>
-    </Listbox>
+    <h4>Réglage</h4>
+    <div class="p-grid">
+        <div class="p-col">
+            <Knob v-model="sampleValue" :min="0" :max="255" />
+            <input type="radio" name="sliderChoice" value="KnobState" @click="updateValue" />
+        </div>
+        <div class="p-col">
+            <Slider v-model="sampleValue" :min="0" :max="255" />
+            <input type="radio" name="sliderChoice" value="SliderState" @click="updateValue" />
+        </div>
+    </div>
     <h4>Capacité</h4>
     <Listbox v-model="modelValue.config[currentStep].capability" :options="formattedCapabilities" optionLabel="name" />
 </template>
 
 <script>
 import InputText from 'primevue/inputtext';
+import Slider from 'primevue/slider';
+import Knob from 'primevue/knob';
 import Listbox from 'primevue/listbox';
 
 export default {
-    name: 'ToggleStateIconChoice',
+    name: 'DimmerChoice',
     components: {
         InputText,
-        Listbox
+        Knob,
+        Listbox,
+        Slider
     },
     props: {
         modelValue: {
@@ -36,9 +39,7 @@ export default {
     },
     data: () => {
         return {
-            onIcon: '',
-            offIcon: '',
-            icons: icons
+            sampleValue: 128
         }
     },
     emits: ['update:modelValue'],
@@ -52,6 +53,11 @@ export default {
                 })
             }
             return capabilities;
+        }
+    },
+    methods: {
+        updateValue(event) {
+            this.modelValue.config[this.currentStep].type = event.path[0].value;
         }
     }
 }

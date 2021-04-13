@@ -23,6 +23,7 @@ import ModelsChoice from './WizardSteps/ModelsChoice.vue';
 import TextChoice from './WizardSteps/TextChoice.vue';
 import ToggleStateIconChoice from './WizardSteps/ToggleStateIconChoice.vue';
 import SingleDeviceChoice from './WizardSteps/SingleDeviceChoice.vue';
+import DimmerChoice from './WizardSteps/DimmerChoice.vue';
 
 export default {
     name: 'AddDeviceCardWizard',
@@ -33,7 +34,8 @@ export default {
         ModelsChoice,
         TextChoice,
         SingleDeviceChoice,
-        ToggleStateIconChoice
+        ToggleStateIconChoice,
+        DimmerChoice
     },
     data: () => {
         return {

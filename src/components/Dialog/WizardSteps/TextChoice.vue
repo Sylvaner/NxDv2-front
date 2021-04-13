@@ -13,9 +13,6 @@ export default {
     props: {
         modelValue: Object,
         currentStep: Number
-    },
-    created() {
-        console.log(this.modelValue);
     }
 }
 </script>

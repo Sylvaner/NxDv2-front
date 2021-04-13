@@ -11,23 +11,11 @@
 <script>
 import DeviceCard from '../../DeviceCard.vue';
 import DataView from 'primevue/dataview';
-import { SingleLight } from '../Models';
+import { SingleLight, SingleDimmerLight } from '../Models';
 
 const models = [
   new SingleLight(),
-  {
-    name: 'Lumière variable',
-    template: {
-      id: 'test-device',
-      card: {},
-      devices: [''],
-      items: [
-        { type: 'Title', props: {title: 'Lumière variable' }},
-        { type: 'ToggleStateIcon', props: {label: 'My state', state: {deviceId: 'test-device', capability: 'on'}, onIcon: 'pi pi-check', offIcon: 'pi pi-times'}},
-        { type: 'KnobState', props: {min: 0, max: 255, state: {deviceId: 'test-device', capability: 'integer'}}}
-      ]
-    }
-  }
+  new SingleDimmerLight()
 ];
 export default {
   name: "ModelsChoice",

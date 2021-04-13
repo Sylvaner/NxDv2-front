@@ -31,10 +31,7 @@ export const store = createStore({
             }, {});
         },
         addDeviceState(state: State, deviceId: any) {
-            console.log('addDeviceState on ' + deviceId);
-            console.log(state.devices);
             if (!Object.keys(state.states).includes(deviceId)) {
-                console.log('Add ' + deviceId);
                 state.states[deviceId] = {deviceId: deviceId}
             }
         },
@@ -43,7 +40,6 @@ export const store = createStore({
         },
         addRenderCard(state: State, renderCard: any) {
             state.renderCards.push(renderCard);
-            console.log(renderCard);
             for (const deviceId of renderCard.devices) {
               store.commit('addDeviceState', deviceId);
             }
