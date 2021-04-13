@@ -5,7 +5,8 @@
           v-for="templateItem in template.items"
           :key="`ci-${templateItem.id}`"
           v-bind="templateItem.props"
-          :is="templateItem.type">
+          :is="templateItem.type"
+          :enabled="enabled">
       </component>
     </template>>
   </Card>
@@ -38,6 +39,11 @@ export default defineComponent({
     template: {
       type: Object,
       required: true
+    },
+    enabled: {
+      type: Boolean,
+      required: false,
+      default: true
     }
   },
   mounted() {

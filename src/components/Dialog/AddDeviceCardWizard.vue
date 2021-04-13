@@ -1,7 +1,8 @@
 <template>
-  <Dialog header="Assistant d'ajout d'une carte" v-model:visible="showed">
-    <Steps v-model="currentStep" :items="wizardSteps" v-on:change="stepChange"/>
-        <component :is="currentStepComponent" />
+  <Dialog header="Assistant d'ajout d'une carte" v-model:visible="showed" @change="ttt">
+    <Steps v-model="currentStep" :items="wizardSteps" @change="ttt" />
+    <ModelsChoice @change="onModelSelected" v-if="currentStep === 0" />
+    <component :is="currentStepComponent" v-model="cardConfig[currentStep - 1]" :deviceConfig="cardConfig[deviceStep]" v-else />
     <keep-alive>
     </keep-alive>
   </Dialog>
@@ -15,6 +16,9 @@ import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
 import Steps from './Steps.vue';
 import ModelsChoice from './WizardSteps/ModelsChoice.vue';
+import TextChoice from './WizardSteps/TextChoice.vue';
+import ToggleStateIconChoice from './WizardSteps/ToggleStateIconChoice.vue';
+import SingleDeviceChoice from './WizardSteps/SingleDeviceChoice.vue';
 
 export default {
     name: 'AddDeviceCardWizard',
@@ -22,34 +26,41 @@ export default {
         Button,
         Dialog,
         Steps,
-        ModelsChoice
+        ModelsChoice,
+        TextChoice,
+        SingleDeviceChoice,
+        ToggleStateIconChoice
     },
     data: () => {
         return {
             showed: false,
             wizardSteps: [],
-            currentStep: 0
+            deviceStep: 0,
+            currentStep: 0,
+            cardConfig: []
         };
     },
     created() {
         this.wizardSteps = [
                 {
-                label: 'Choix du modèle',
-                component: 'ModelsChoice'
-                },
-                {
-                    label: 'Configuration du modèle',
-                    component: 'dazd'
+                    label: 'Choix du modèle'
                 }
-            ]
+            ];
+        console.log(this.$store.getters.devices());
     },
     methods: {
         showAddDeviceWizard() {
             this.showed = true;
         },
-        stepChange() {
-            console.log('coucou');
-            console.log(this.currentStep);
+        onModelSelected(selectedModel) {
+            this.wizardSteps = [this.wizardSteps[0], ...selectedModel.wizardSteps];
+            this.deviceStep = selectedModel.deviceStep;
+            this.cardConfig = selectedModel.defaultValues;
+            ++this.currentStep;
+        },
+        ttt() {
+            console.log(this.deviceStep);
+            console.log(this.cardConfig);
         }
     },
     computed: {

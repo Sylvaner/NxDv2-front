@@ -2,7 +2,7 @@
   <DataView :value="models" layout="grid">
     <template #grid="slotProps">
       <div style="padding: .5em" class="p-col-12 p-md-4">
-        <DeviceCard :template="slotProps.data.template" />
+        <DeviceCard :template="slotProps.data.template" @click="selectedModel(slotProps.data)" :enabled="false" />
       </div>
     </template>
   </DataView>
@@ -11,20 +11,10 @@
 <script>
 import DeviceCard from '../../DeviceCard.vue';
 import DataView from 'primevue/dataview';
+import { SingleLight } from '../Models';
 
 const models = [
-  {
-    name: 'Lumière simple',
-    template: {
-      id: 'test-device',
-      card: {},
-      devices: ['test-device'],
-      items: [
-        { type: 'Title', props: {title: 'Lumière simple' }},
-        { type: 'ToggleStateIcon', props: {label: 'My state', state: {deviceId: 'test-device', capability: 'on'}, onIcon: 'pi pi-check', offIcon: 'pi pi-times'}}
-      ]
-    }
-  },
+  new SingleLight(),
   {
     name: 'Lumière variable',
     template: {
@@ -47,13 +37,7 @@ export default {
   },
   data: () => {
     return {
-      models: models,
-      test: [
-        { label: 'coucou', data: 'test'},
-        { label: 'mouah', data: 'pouah'},
-        { label: 'ppp', data: 'aodsqkdp'},
-        { label: 'bof', data: 'podkqspdok'}
-      ]
+      models: models
     }
   },
   created() {
@@ -63,8 +47,13 @@ export default {
         'on': true,
         'integer': 128
       }
-    })
-    console.log(this.models);
+    });
+  },
+  emits: ['change'],
+  methods: {
+    selectedModel(model) {
+      this.$emit('change', model);
+    }
   }
 }
 </script>
