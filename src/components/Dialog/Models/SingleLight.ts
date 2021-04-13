@@ -1,5 +1,3 @@
-import Device from '../../../services/NextDomApi';
-
 export class SingleLight {
     public name = 'Lumière simple';
 
@@ -9,10 +7,9 @@ export class SingleLight {
       devices: ['test-device'],
       items: [
         { type: 'Title', props: {title: 'Lumière simple' }},
-        { type: 'ToggleStateIcon', props: {label: '', state: {deviceId: 'test-device', capability: 'on'}, onIcon: 'pi pi-check', offIcon: 'pi pi-times'}}
+        { type: 'ToggleStateIcon', props: {label: 'My state', state: {deviceId: 'test-device', capability: 'on'}, onIcon: 'pi pi-check', offIcon: 'pi pi-times'}}
       ]
     };
-
     public wizardSteps = [
       {
         label: 'Lumière',
