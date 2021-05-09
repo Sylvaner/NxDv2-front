@@ -15,24 +15,25 @@ import ConfirmationService from 'primevue/confirmationservice';
 import NextDomApi from './services/NextDomApi';
 
 const eventBus = mitt();
-await NextDomApi.getInstance().connectFromCache(store);
-
-router.beforeEach((to, from, next) => {
-   if (store.getters.isConnected()) {
-      next();
-   } else {
-      if (to.name !== 'Login') {
-         next('/login');
-      } else {
+NextDomApi.getInstance().connectFromCache(store).then(() => {
+   router.beforeEach((to, from, next) => {
+      if (store.getters.isConnected()) {
          next();
+      } else {
+         if (to.name !== 'Login') {
+            next('/login');
+         } else {
+            next();
+         }
       }
-   }
+   });
+   
+   const app = createApp(App);
+   app.config.globalProperties.eventBus = eventBus;
+   app.use(store)
+      .use(PrimeVue)
+      .use(router)
+      .use(ConfirmationService)
+      .mount('#app')
+   
 });
-
-const app = createApp(App);
-app.config.globalProperties.eventBus = eventBus;
-app.use(store)
-   .use(PrimeVue)
-   .use(router)
-   .use(ConfirmationService)
-   .mount('#app')

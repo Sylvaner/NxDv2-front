@@ -48,12 +48,18 @@ export default class NextDomApi {
     return NextDomApi.instance;
   }
 
-  public async connectFromCache(store: Store<any>) {
-    const rawStoredCredentials = localStorage.getItem('credentials');
-    if (rawStoredCredentials !== null) {
-      const storedCredentials: Credentials = JSON.parse(rawStoredCredentials);
-      await this.connect(storedCredentials, store);
-    }
+  public connectFromCache(store: Store<any>): Promise<void> {
+    return new Promise<void>((resolve) => {
+      const rawStoredCredentials = localStorage.getItem('credentials');
+      if (rawStoredCredentials !== null) {
+        const storedCredentials: Credentials = JSON.parse(rawStoredCredentials);
+        this.connect(storedCredentials, store).then(() => {
+          resolve();
+        });
+      } else {
+        resolve();
+      }
+    });
   }
 
   public connect(credentials: Credentials, store: Store<any>): Promise<NextDomApi> {
