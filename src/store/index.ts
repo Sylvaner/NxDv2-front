@@ -5,7 +5,8 @@ interface DeviceList { [deviceId: string]: Device};
 
 export type State = {
     devices: DeviceList
-    states: { [deviceid: string]: DeviceState}
+    states: { [deviceid: string]: DeviceState},
+    renders: any[],
     renderCards: any[]
     credentials: Credentials
 };
@@ -13,6 +14,7 @@ export type State = {
 const state: State = {
     devices: {},
     states: {},
+    renders: [],
     renderCards: [],
     credentials: {server: ''}
 };
@@ -24,7 +26,7 @@ export const store = createStore({
             state.credentials = credentials;
             localStorage.setItem('credentials', JSON.stringify(credentials));
         },
-        updatesDevices(state: State, devices: Device[]) {
+        updateDevices(state: State, devices: Device[]) {
             state.devices = devices.reduce((result: DeviceList, currentDevice) => {
                 result[currentDevice.id] = currentDevice;
                 return result;
@@ -43,7 +45,10 @@ export const store = createStore({
             for (const deviceId of renderCard.devices) {
               store.commit('addDeviceState', deviceId);
             }
-        }
+        },
+      updateRenders(state: State, payload: any) {
+          state.renders = payload;
+      }
     },
     getters: {
         deviceState: (state: State) => (deviceId: string, capability: string) => {
@@ -75,6 +80,9 @@ export const store = createStore({
         },
         renderCards: (state: State) => () => {
             return state.renderCards;
+        },
+        renders: (state: State) => () => {
+            return state.renders;
         }
     }
 })

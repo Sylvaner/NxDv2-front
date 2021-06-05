@@ -22,7 +22,7 @@ export default {
     emits: ['update:modelValue'],
     created() {
       NextDomApi.getDevices().then((devices) => {
-        this.$store.commit('updatesDevices', devices);
+        this.$store.commit('updateDevices', devices);
       });
     },
     computed: {

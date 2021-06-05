@@ -55,6 +55,9 @@ export default class NextDomApi {
         const storedCredentials: Credentials = JSON.parse(rawStoredCredentials);
         this.connect(storedCredentials, store).then(() => {
           resolve();
+        }).catch(() => {
+          localStorage.removeItem('credentials');
+          resolve();
         });
       } else {
         resolve();
@@ -67,7 +70,7 @@ export default class NextDomApi {
       const testInstance = Axios.create({
         baseURL: `http://${credentials.server}`,
       });
-      testInstance.get('/zone').then((_: any) => {
+      testInstance.get('/zone', { timeout: 2000 }).then((_: any) => {
         store.commit('credentials', credentials);
         this.axiosInstance = Axios.create({
           baseURL: `http://${credentials.server}`,
@@ -93,10 +96,48 @@ export default class NextDomApi {
     });
   }
 
-  public static getDevices(): Promise<any> {
+  private static getAll(target: string): Promise<any> {
     return new Promise<[any]>((resolve, reject) => {
       NextDomApi.getInstance()
-        .axiosInstance.get("/device")
+        .axiosInstance.get('/' + target)
+        .then((response: any) => {
+          resolve(response.data);
+        })
+        .catch((response: any) => {
+          reject(response);
+        });
+    });
+  }
+
+  public static getDevices(): Promise<any> {
+    return NextDomApi.getAll('device');
+  }
+
+  public static getRenders(): Promise<any> {
+    return NextDomApi.getAll('render');
+  }
+
+  public static getZones(): Promise<any> {
+    return NextDomApi.getAll('zone');
+  }
+
+  public static addRender(renderData: object): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+      NextDomApi.getInstance()
+        .axiosInstance.post('/render', renderData)
+        .then((response: any) => {
+          resolve(response.data);
+        })
+        .catch((response: any) => {
+          reject(response);
+        })
+    });
+  }
+
+  public static getRender(id: string): Promise<any> {
+    return new Promise<[any]>((resolve, reject) => {
+      NextDomApi.getInstance()
+        .axiosInstance.get('/render/' + id)
         .then((response: any) => {
           resolve(response.data);
         })
@@ -107,7 +148,7 @@ export default class NextDomApi {
   }
 
   public static postScenario(scenarioData: object): Promise<any> {
-    return new Promise<[any]>((resolve, reject) => {
+    return new Promise<any>((resolve, reject) => {
       NextDomApi.getInstance()
         .axiosInstance.post("/scenario", scenarioData)
         .then((response: any) => {

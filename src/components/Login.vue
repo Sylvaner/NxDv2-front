@@ -28,7 +28,7 @@ export default {
             if (this.server !== '') {
                 NextDomApi.getInstance().connect({server: this.server}, this.$store).then((_) => {
                     StateUpdater.start(this.$store);
-                    this.$router.replace('Home');
+                    this.$router.replace('/');
                 });
             }
         }

@@ -20,7 +20,7 @@ export default class StateUpdater {
                     });
                 }
             }, 2000);
-            this.started = true;    
+            this.started = true;
         }
     }
 
@@ -30,7 +30,7 @@ export default class StateUpdater {
 
     private static initDevicesInStore(store: Store<any>): void {
         NextDomApi.getDevices().then((devices) => {
-            store.commit('updatesDevices', devices);
+            store.commit('updateDevices', devices);
         })
     }
 }

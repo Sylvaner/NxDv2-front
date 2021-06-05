@@ -15,7 +15,7 @@
   <Panel v-if="$store.getters.devicesToManage(showHiddenDevices).length > 0" header="Devices to manage" toggleable>
     <DataTable :value="$store.getters.devicesToManage(showHiddenDevices)" v-model:expandedRows="expandedRows" dataKey="_id">
       <Column :expander="true" headerStyle="width: 3rem" />
-      <Column field="id" header="id" sortable></Column>      
+      <Column field="id" header="id" sortable></Column>
       <Column field="name" header="Name" sortable></Column>
       <Column headerStyle="width: 4rem; text-align: center" bodyStyle="text-align: center; overflow: visible">
         <template #body="{data}">
@@ -96,7 +96,7 @@ export default defineComponent({
   methods: {
     updateDevices() {
       NextDomApi.getDevices().then((devices) => {
-        this.$store.commit('updatesDevices', devices);
+        this.$store.commit('updateDevices', devices);
       });
     },
     setDeviceCategory(device: Device, category: string) {
@@ -116,6 +116,7 @@ export default defineComponent({
       return result;
     },
     showChangeDeviceCategoryDialog(data: any) {
+      console.log(data);
       this.eventBus.emit('showChangeDeviceCategoryDialog', data);
     },
     hideDevice(data: Device) {
